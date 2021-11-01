@@ -11,14 +11,13 @@ import java.nio.file.Paths;
 
 public class BotStartup {
     public static void main(String[] args) throws LoginException, InterruptedException, IOException, URISyntaxException {
-        //JDA api = JDABuilder.createDefault("ODYxOTY0MzAxNzQ0NzM0MjQ4.YORc0A.WcMiGhugPgOFoNHqLmTTeuCzAPo").build();
+
 
         ClassLoader classLoader = BotStartup.class.getClassLoader();
         URL resource = classLoader.getResource("token.txt");
 
         String token = new String(Files.readAllBytes(Path.of(resource.toURI())));
 
-        System.out.print(token);
 
         JDA api = JDABuilder.createDefault(token)
                 .addEventListeners(new MessageListener())
