@@ -16,11 +16,8 @@ public class BotStartup {
 
         String token = new String(Files.readAllBytes(Path.of(tokenresource.toURI())));
 
-
         JDA api = JDABuilder.createDefault(token)
                 .addEventListeners(new MessageListener())
                 .build().awaitReady();
-
-
     }
 }

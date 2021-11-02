@@ -2,6 +2,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -11,13 +12,18 @@ public class MessageListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event){
         if (event.getAuthor().isBot()) return;
 
-
         Message message = event.getMessage();
         String content = message.getContentRaw();
         MessageChannel channel = event.getChannel();
+        String msgAuthor = message.getAuthor().getAsTag();
 
-        if (content.equals("$ping"))
-        {
+        System.out.println(msgAuthor);
+
+        if (content.equalsIgnoreCase("hello there") || content.equalsIgnoreCase("hello there!") ){
+            channel.sendMessage("General Kenobi!").queue();
+        }
+
+        if (content.equals("$ping")){
             //MessageChannel channel = event.getChannel();
             channel.sendMessage("Pong!").queue(); // Important to call .queue() on the RestAction returned by sendMessage(...)
         }
@@ -26,19 +32,35 @@ public class MessageListener extends ListenerAdapter {
             channel.sendMessage("Possible Commands are:\n-$ping\n$bid").queue();
         }
 
-        if (content.equalsIgnoreCase("hello there") || content.equalsIgnoreCase("hello there!") ){
-            channel.sendMessage("General Kenobi!").queue();
-        }
+//Personal money to bet on roulette. Just a test structure. Not optimal solution! Not for large scale use!
+
+        //HashMap<String, Double> moneyAccounts = new HashMap<String, Double>();
+
 
 // start of roulette command
         //checks if command format is correct
         if (content.equalsIgnoreCase("$bid") || content.equalsIgnoreCase("$bid help")){
             channel.sendMessage("Welcome to Roulette! Please enter a number between 0 and 36 or black or red after the command").queue();
         } else if (content.startsWith("$bid")){
+
+/*
+            //checks if user already exists in HashMap, creates it if not
+            if (!moneyAccounts.containsKey(msgAuthor)){
+                moneyAccounts.put(msgAuthor, 1000.0);
+            }
+
+
+            System.out.println(moneyAccounts);
+*/
+
+
             // init variable bidparam to store the value of the user input. Default is -3
             int bidparam = -3;
             String[] arrOfStr = content.split(" ", 2);
             String bidNumber = arrOfStr[1];
+            //String bidAmount = arrOfStr[2];
+
+            //Double moneyIHave = moneyAccounts.get(msgAuthor);
 
             // checks if user entered black or red as keyword
             if (bidNumber.equalsIgnoreCase("black")){
@@ -72,24 +94,41 @@ public class MessageListener extends ListenerAdapter {
             List<Integer> redNumbers = List.of(32,19,21,25,34,27,36,30,23,5,16,1,14,9,18,7,12,3);
             List<Integer> blackNumbers = List.of(15,4,2,17,6,13,11,8,10,24,33,20,31,22,29,28,35,26);
 
-            //System.out.println(redNumbers.contains(27));
+            Double wonMoney = 0.0;
 
-            //int[] redNumbers = new int[]{32,19,21,25,34,27,36,30,23,5,16,1,14,9,18,7,12,3};
-            //int[] blackNumbers = new int[]{15,4,2,17,6,13,11,8,10,24,33,20,31,22,29,28,35,26};
 
             if (bidparam == rand_int){
                 channel.sendMessage("Wow! You guessed the correct number! Your bid money has been multiplied by 36!").queue();
+                //wonMoney = bidMoney * 36;
             } else if (bidparam == -1 && blackNumbers.contains(rand_int)){
                 channel.sendMessage("You guessed the right colour! You have doubled your money!").queue();
+                //wonMoney = bidMoney * 2;
             } else if (bidparam == -2 && redNumbers.contains(rand_int)){
                 channel.sendMessage("You guessed the right colour! You have doubled your money!").queue();
+                //wonMoney = bidMoney * 2;
             } else if (bidparam == -3){
                 channel.sendMessage("oops, something went wrong").queue();
             } else {
-                channel.sendMessage("Unfortunately, you didn't guess your number right!").queue();
+                channel.sendMessage("Unfortunately, you didn't guess your number or colour right!").queue();
+                //wonMoney = 0 - bidMoney;
             }
 
+/*
+            Double newBalance = moneyAccounts.get(msgAuthor) + wonMoney;
+            moneyAccounts.replace(msgAuthor, newBalance);
+            System.out.println(moneyAccounts.get(msgAuthor));
+            
+ */
         }
+
+
+/*
+        if (content.equalsIgnoreCase("$money")){
+            System.out.println(moneyAccounts.get(msgAuthor));
+            System.out.println(moneyAccounts);
+            channel.sendMessage(moneyAccounts.get(msgAuthor).toString()).queue();
+        }
+*/
 
     }
 }
