@@ -19,8 +19,6 @@ public class MessageListener extends ListenerAdapter {
 
         System.out.println("Message author is:" + msgAuthor);
 
-        System.out.println("Test");
-
         if (content.equalsIgnoreCase("hello there") || content.equalsIgnoreCase("hello there!") ){
             channel.sendMessage("General Kenobi!").queue();
         }
