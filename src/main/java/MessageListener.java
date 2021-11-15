@@ -17,7 +17,7 @@ public class MessageListener extends ListenerAdapter {
         MessageChannel channel = event.getChannel();
         String msgAuthor = message.getAuthor().getAsTag();
 
-        System.out.println(msgAuthor);
+        System.out.println("Message author is:" + msgAuthor);
 
         if (content.equalsIgnoreCase("hello there") || content.equalsIgnoreCase("hello there!") ){
             channel.sendMessage("General Kenobi!").queue();
@@ -94,7 +94,7 @@ public class MessageListener extends ListenerAdapter {
             List<Integer> redNumbers = List.of(32,19,21,25,34,27,36,30,23,5,16,1,14,9,18,7,12,3);
             List<Integer> blackNumbers = List.of(15,4,2,17,6,13,11,8,10,24,33,20,31,22,29,28,35,26);
 
-            Double wonMoney = 0.0;
+            //Double wonMoney = 0.0;
 
 
             if (bidparam == rand_int){
@@ -117,7 +117,7 @@ public class MessageListener extends ListenerAdapter {
             Double newBalance = moneyAccounts.get(msgAuthor) + wonMoney;
             moneyAccounts.replace(msgAuthor, newBalance);
             System.out.println(moneyAccounts.get(msgAuthor));
-            
+
  */
         }
 
