@@ -1,7 +1,12 @@
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -12,10 +17,10 @@ public class MessageListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event){
         if (event.getAuthor().isBot()) return;
 
-        Message message = event.getMessage();
-        String content = message.getContentRaw();
+        //Message message = event.getMessage();
+        String content = event.getMessage().getContentRaw();
         MessageChannel channel = event.getChannel();
-        String msgAuthor = message.getAuthor().getAsTag();
+        String msgAuthor = event.getMessage().getAuthor().getAsTag();
 
         System.out.println("Message author is:" + msgAuthor);
 
@@ -23,7 +28,7 @@ public class MessageListener extends ListenerAdapter {
             channel.sendMessage("General Kenobi!").queue();
         }
 
-        if (content.equals("$ping")){
+        if (content.equalsIgnoreCase("$ping")){
             //MessageChannel channel = event.getChannel();
             channel.sendMessage("Pong!").queue(); // Important to call .queue() on the RestAction returned by sendMessage(...)
         }
@@ -91,8 +96,8 @@ public class MessageListener extends ListenerAdapter {
 
             System.out.println("Random number: " + rand_int);
 
-            List<Integer> redNumbers = List.of(32,19,21,25,34,27,36,30,23,5,16,1,14,9,18,7,12,3);
-            List<Integer> blackNumbers = List.of(15,4,2,17,6,13,11,8,10,24,33,20,31,22,29,28,35,26);
+            List<Integer> redNumbers = List.of(32,19,21,25,34,27,36,30,23,5,16,1,14,9,18,7,12,3); //-2
+            List<Integer> blackNumbers = List.of(15,4,2,17,6,13,11,8,10,24,33,20,31,22,29,28,35,26); //-1
 
             //Double wonMoney = 0.0;
 
@@ -128,7 +133,44 @@ public class MessageListener extends ListenerAdapter {
             System.out.println(moneyAccounts);
             channel.sendMessage(moneyAccounts.get(msgAuthor).toString()).queue();
         }
+
+
+
 */
 
+        if (content.equalsIgnoreCase("$listen")){
+            BotStartup.apiv.getPresence().setActivity(Activity.listening("Darude - Sandstorm"));
+        }
+
+        if (content.equalsIgnoreCase("$addrole")){
+            channel.sendMessage("Please select the role you want!\n\n\u2694\uFE0F\tFighter\n\uD83D\uDEE1\tTank").queue(message -> {
+                message.addReaction("\u2694\uFE0F").queue();
+                message.addReaction("\uD83D\uDEE1").queue();
+            });
+        }
+        
     }
+
+
+    public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event){
+        if (event.getUser().isBot()) return;
+
+        String reaction = event.getReactionEmote().toString();
+        String reactAutor = event.getUser().getAsTag();
+        String msgID = event.getMessageId();
+
+        System.out.println(reactAutor + " reacted with " + reaction + " on " + msgID);
+
+    }
+
+    public void onMessageReactionRemove(@Nonnull MessageReactionRemoveEvent event){
+        if (event.getUser().isBot()) return;
+
+        String reaction = event.getReactionEmote().toString();
+        String reactAutor = event.getUser().getAsTag();
+        String msgID = event.getMessageId();
+
+        System.out.println(reactAutor + " removed the reaction " + reaction + " on " + msgID);
+    }
+
 }
