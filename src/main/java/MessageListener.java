@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.internal.handle.GuildRoleCreateHandler;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -12,6 +13,9 @@ import java.util.List;
 import java.util.Random;
 
 public class MessageListener extends ListenerAdapter {
+
+    Role role1;
+    Role role2;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
@@ -139,18 +143,39 @@ public class MessageListener extends ListenerAdapter {
 */
 
         if (content.equalsIgnoreCase("$listen")){
-            BotStartup.apiv.getPresence().setActivity(Activity.listening("Darude - Sandstorm"));
+            channel.sendMessage("Add something after this command to let the bot listen to it!").queue();
+        } else if (content.startsWith("$listen ")){
+            String[] arrOfStr = content.split(" ", 2);
+            String song = arrOfStr[1];
+            BotStartup.apiv.getPresence().setActivity(Activity.listening(song));
         }
+
+
 
         if (content.equalsIgnoreCase("$addrole")){
             channel.sendMessage("Please select the role you want!\n\n\u2694\uFE0F\tFighter\n\uD83D\uDEE1\tTank").queue(message -> {
                 message.addReaction("\u2694\uFE0F").queue();
                 message.addReaction("\uD83D\uDEE1").queue();
             });
-        }
-        
-    }
 
+            //Role role = event.getGuild().getRolesByName("@everyone", true).get(0);
+
+            if (event.getGuild().getRolesByName("fighter", true).isEmpty()){
+                role1 = event.getGuild().createRole().setName("Fighter").setPermissions(0L).complete();
+            } else {
+                System.out.println("Role already exists");
+            }
+            if (event.getGuild().getRolesByName("tank", true).isEmpty()){
+                role2 = event.getGuild().createRole().setName("Tank").setPermissions(0L).complete();
+            } else {
+                System.out.println("Role already exists");
+            }
+
+            System.out.println("Role1 ID is: " + role1.toString());
+            System.out.println("Role2 ID is: " + role2.toString());
+        }
+
+    }
 
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event){
         if (event.getUser().isBot()) return;
@@ -160,7 +185,11 @@ public class MessageListener extends ListenerAdapter {
         String msgID = event.getMessageId();
 
         System.out.println(reactAutor + " reacted with " + reaction + " on " + msgID);
-
+/*
+        if (reaction.equalsIgnoreCase("RE:U+2694U+fe0f")){
+            event.getGuild().addRoleToMember(event.getUserIdLong(), role1);
+        }
+*/
     }
 
     public void onMessageReactionRemove(@Nonnull MessageReactionRemoveEvent event){
