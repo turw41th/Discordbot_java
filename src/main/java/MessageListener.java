@@ -171,11 +171,17 @@ public class MessageListener extends ListenerAdapter {
                 System.out.println("Role already exists");
             }
 
-            System.out.println("Role1 ID is: " + role1.toString());
-            System.out.println("Role2 ID is: " + role2.toString());
+            System.out.println("Role1 ID is: " + role1.getId());
+            System.out.println("Role2 ID is: " + role2.getId());
+        }
+
+        if (content.equalsIgnoreCase("$delrole")){
+
         }
 
     }
+
+
 
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event){
         if (event.getUser().isBot()) return;
@@ -185,11 +191,12 @@ public class MessageListener extends ListenerAdapter {
         String msgID = event.getMessageId();
 
         System.out.println(reactAutor + " reacted with " + reaction + " on " + msgID);
-/*
+
         if (reaction.equalsIgnoreCase("RE:U+2694U+fe0f")){
-            event.getGuild().addRoleToMember(event.getUserIdLong(), role1);
+            //event.getGuild().addRoleToMember(event.getUserIdLong(), role1);
+            System.out.println(reaction);
         }
-*/
+
     }
 
     public void onMessageReactionRemove(@Nonnull MessageReactionRemoveEvent event){
