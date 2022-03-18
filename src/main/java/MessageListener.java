@@ -177,6 +177,9 @@ public class MessageListener extends ListenerAdapter {
 
         if (content.equalsIgnoreCase("$delrole")){
 
+            //isn't working as intended
+            role1.delete();
+            role2.delete();
         }
 
     }
