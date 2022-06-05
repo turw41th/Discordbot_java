@@ -182,6 +182,32 @@ public class MessageListener extends ListenerAdapter {
             role2.delete();
         }
 
+        if (content.equalsIgnoreCase("$mention")){
+            String user = event.getAuthor().getId();
+            channel.sendMessage("Hey <@" + user + ">").queue();
+        }
+
+
+
+        /**
+         * ---------Roll command-----------
+         */
+/*
+        if (content.equalsIgnoreCase("$r")){
+            channel.sendMessage("Format: $r amount+die+modifier").queue();
+        } else if (content.startsWith("$r ")){
+            String[] rollArray = content.split(" ", 2);
+            String dicePlusMod = rollArray[1];
+
+            if (dicePlusMod.contains("+")){
+                String[] mod = dicePlusMod.split("+");
+                int modToAdd = Integer.parseInt(mod[1]);
+            }
+
+            //channel.sendMessage(dicePlusMod).queue();
+        }
+*/
+
     }
 
 
@@ -211,5 +237,6 @@ public class MessageListener extends ListenerAdapter {
 
         System.out.println(reactAutor + " removed the reaction " + reaction + " on " + msgID);
     }
+
 
 }
